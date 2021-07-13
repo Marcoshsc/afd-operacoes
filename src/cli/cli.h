@@ -1,5 +1,4 @@
 #include <stdio.h>
-
 typedef struct cli_item
 {
   char *name;
