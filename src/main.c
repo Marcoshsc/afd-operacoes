@@ -35,7 +35,10 @@ int main(int argc, char *argv[])
     printf("Invalid input provided. Error log: %s\n", appContext->message);
   }
 
-  AFD *afd = readAFD("./afd.txt");
+  AFD *afd = readAFD("./afdCopy.txt");
+  printf("%d\n", *afd->number_states);
+  printf("tenho o afd\n");
+  writeAFD(*afd, "./afdCopy2.txt");
 
   freeAppContext(appContext);
   freeCLI(result);
