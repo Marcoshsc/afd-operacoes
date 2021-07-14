@@ -214,3 +214,36 @@ void writeAFD(AFD afd, char *fileName)
   writeFinalStates(afd, file);
   puts("escreveu estados finais");
 }
+
+void freeTransition(Transition *transition)
+{
+  free(transition->from);
+  free(transition->to);
+  free(transition->read);
+}
+
+void freeAFD(AFD *afd)
+{
+  for (int i = 0; i < *afd->number_states; i++)
+  {
+    free(afd->states[i]);
+  }
+  for (int i = 0; i < *afd->number_symbols; i++)
+  {
+    free(afd->alphabet[i]);
+  }
+  for (int i = 0; i < *afd->number_transitions; i++)
+  {
+    freeTransition(afd->transitions[i]);
+  }
+
+  free(afd->transitions);
+  free(afd->alphabet);
+  free(afd->states);
+  free(afd->final_states);
+  free(afd->number_states);
+  free(afd->number_symbols);
+  free(afd->number_final_states);
+  free(afd->number_transitions);
+  free(afd->initial_state);
+}

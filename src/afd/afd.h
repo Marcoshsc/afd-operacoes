@@ -32,3 +32,4 @@ int getSymbolPosition(AFD afd, char *symbol);
 AFD *getEmptyAFD();
 AFD *readAFD(char *fileName);
 void writeAFD(AFD afd, char *fileName);
+void freeAFD(AFD *afd);

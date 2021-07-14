@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
   printf("tenho o afd\n");
   writeAFD(*afd, "./afdCopy2.txt");
 
+  freeAFD(afd);
   freeAppContext(appContext);
   freeCLI(result);
 }
