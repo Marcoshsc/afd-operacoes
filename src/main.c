@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "./context/context.h"
+#include "./afd/afd.h"
 
 CLI_Params *createCLIParams()
 {
@@ -33,6 +34,8 @@ int main(int argc, char *argv[])
   {
     printf("Invalid input provided. Error log: %s\n", appContext->message);
   }
+
+  AFD *afd = readAFD("./afd.txt");
 
   freeAppContext(appContext);
   freeCLI(result);
