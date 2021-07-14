@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "./context/context.h"
-#include "./afd/afd.h"
+#include "./operations/operations.h"
 
 CLI_Params *createCLIParams()
 {
@@ -27,20 +26,19 @@ int main(int argc, char *argv[])
   if (appContext->err)
   {
     printf("Invalid input provided. Error log: %s\n", appContext->message);
+    return 1;
   }
 
   validateAppContext(appContext);
   if (appContext->err)
   {
     printf("Invalid input provided. Error log: %s\n", appContext->message);
+    return 1;
   }
 
-  AFD *afd = readAFD("./afdCopy.txt");
-  printf("%d\n", *afd->number_states);
-  printf("tenho o afd\n");
-  writeAFD(*afd, "./afdCopy2.txt");
+  executeOperation(*appContext);
 
-  freeAFD(afd);
   freeAppContext(appContext);
   freeCLI(result);
+  return 0;
 }

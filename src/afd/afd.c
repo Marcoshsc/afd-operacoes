@@ -127,16 +127,11 @@ AFD *readAFD(char *fileName)
   }
   AFD *afd = getEmptyAFD();
   readChars(&afd->states, afd->number_states, file);
-  printf("%d\n", *afd->number_states);
   readChars(&afd->alphabet, afd->number_symbols, file);
-  printf("%d\n", *afd->number_states);
   readTransitions(afd, file);
-  printf("%d\n", *afd->number_states);
   readInitialState(afd, file);
-  printf("%d\n", *afd->number_states);
   readFinalStates(afd, file);
 
-  printf("%d\n", *afd->number_states);
   fclose(file);
   return afd;
 }
@@ -154,10 +149,8 @@ void writeChar(char *value, FILE *file)
 void writeChars(char **list, int size, FILE *file)
 {
   writeInt(size, file);
-  puts("escreveu");
   for (int i = 0; i < size; i++)
   {
-    puts("passou 1");
     writeChar(list[i], file);
   }
 }
@@ -165,21 +158,13 @@ void writeChars(char **list, int size, FILE *file)
 void writeTransitions(AFD afd, FILE *file)
 {
   int size = *afd.number_transitions;
-  printf("%d\n", size);
   writeInt(size, file);
-  puts("wrote size");
   for (int i = 0; i < size; i++)
   {
     Transition *element = afd.transitions[i];
-    puts("GOT HERE");
-    printf("%d\n", *element->from);
     char *from = afd.states[*element->from];
-    puts(from);
     char *read = afd.alphabet[*element->read];
-    puts(read);
     char *to = afd.states[*element->to];
-    puts(to);
-    printf("transitions %d\n", i);
     fprintf(file, "%s %s %s\n", from, read, to);
   }
 }
@@ -204,15 +189,10 @@ void writeAFD(AFD afd, char *fileName)
   }
   printf("%d\n", *afd.number_states);
   writeChars(afd.states, *afd.number_states, file);
-  puts("escreveu estados");
   writeChars(afd.alphabet, *afd.number_symbols, file);
-  puts("escreveu alfabeto");
   writeTransitions(afd, file);
-  puts("escreveu transitions");
   writeChar(afd.states[*afd.initial_state], file);
-  puts("escreveu estados iniciais");
   writeFinalStates(afd, file);
-  puts("escreveu estados finais");
 }
 
 void freeTransition(Transition *transition)
