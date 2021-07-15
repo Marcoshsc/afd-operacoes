@@ -3,12 +3,12 @@
 #include "./context.h"
 #include "../params/params.h"
 
-int updateForOneInput(CLI_Result result, char *name, ApplicationContext *appContext, int required)
+int updateForOneInput(CLI_Result result, char *name, char **receiver, ApplicationContext *appContext, int required)
 {
   CLI_Value *value = getCLIValue(result, name);
   if (value)
   {
-    appContext->input1 = value->value;
+    *receiver = value->value;
   }
   else
   {
@@ -45,10 +45,10 @@ ApplicationContext *getAppContext(CLI_Result result)
   ApplicationContext *appContext = malloc(sizeof(ApplicationContext));
   appContext->err = 0;
 
-  appContext->outputProvided = updateForOneInput(result, OUTPUT, appContext, 1);
-  appContext->dot = updateForOneInput(result, DOT, appContext, 0);
-  appContext->complemento = updateForOneInput(result, COMPLEMENTO, appContext, 0);
-  appContext->minimizacao = updateForOneInput(result, MINIMIZACAO, appContext, 0);
+  appContext->outputProvided = updateForOneInput(result, OUTPUT, &appContext->output, appContext, 1);
+  appContext->dot = updateForOneInput(result, DOT, &appContext->input1, appContext, 0);
+  appContext->complemento = updateForOneInput(result, COMPLEMENTO, &appContext->input1, appContext, 0);
+  appContext->minimizacao = updateForOneInput(result, MINIMIZACAO, &appContext->input1, appContext, 0);
   appContext->intersecao = updateForTwoInputs(result, INTERSECAO, appContext);
   appContext->uniao = updateForTwoInputs(result, UNIAO, appContext);
   appContext->reconhecer = updateForTwoInputs(result, RECONHECER, appContext);

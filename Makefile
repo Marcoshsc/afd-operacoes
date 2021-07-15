@@ -1,2 +1,2 @@
 main:
-	gcc src/main.c -o main
+	gcc src/main.c src/string/stringutil.c src/context/context.c src/operations/operations.c src/operations/executor/executor.c src/operations/visualization/visualization.c src/operations/dot/dot.c src/afd/afd.c	src/cli/cli.c -o main
