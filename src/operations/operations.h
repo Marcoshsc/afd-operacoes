@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../afd/afd.h"
 #include "../context/context.h"
-#include "./dot/dot.h"
+#include "./visualization/filter/filter.h"
 
 #define OPERATIONS_H
 

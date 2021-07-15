@@ -1,6 +1,7 @@
 #include <stdlib.h>
+#include <string.h>
 #include "../operations.h"
-#include "../../string/stringutil.h"
+#include "../../strings/stringutil.h"
 
 char **getDoubleCircles(AFD *afd)
 {
@@ -39,5 +40,6 @@ DOTFormat *visualizacao(AFD *afd)
   char **double_circles = getDoubleCircles(afd);
   DOTTransition **transitions = getTransitionArray(afd);
   DOTFormat *dotFormat = getDOTFormat(double_circles, *afd->number_final_states, transitions, *afd->number_transitions);
+  filterTransitions(dotFormat);
   return dotFormat;
 }

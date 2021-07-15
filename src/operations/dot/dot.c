@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "../../string/stringutil.h"
+#include "../../strings/stringutil.h"
 #include "./dot.h"
 
 void writeDot(DOTFormat *dotFormat, char *fileName)
