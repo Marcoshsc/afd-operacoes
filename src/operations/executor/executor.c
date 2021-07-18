@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "../operations.h"
+#include "../recognition/recognition.h"
 
 void executeOperation(ApplicationContext context)
 {
@@ -33,10 +34,16 @@ void executeOperation(ApplicationContext context)
   }
   if (context.reconhecer)
   {
-    char **words = readWords(context.input2);
-    int *results = reconhecer(afd, words);
-    writeReconhecerResult(results, context.output);
+    int size;
+    char **words = readWords(context.input2, &size);
+    if (!words)
+    {
+      return;
+    }
+    int *results = reconhecer(afd, words, size);
+    writeReconhecerResult(results, context.output, size);
     free(results);
+    freeWords(words, size);
   }
   if (result)
   {

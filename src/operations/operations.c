@@ -24,21 +24,3 @@ AFD *minimizacao(AFD *afd)
   puts("Minimizacao");
   return NULL;
 }
-
-int *reconhecer(AFD *afd, char **words)
-{
-  puts("Reconhecer");
-  return NULL;
-}
-
-char **readWords(char *fileName)
-{
-}
-
-void freeWords(char **words)
-{
-}
-
-void writeReconhecerResult(int *result, char *fileName)
-{
-}
