@@ -1,12 +1,6 @@
 #include <stdlib.h>
 #include "./operations.h"
 
-AFD *complemento(AFD *afd)
-{
-  puts("Complemento");
-  return NULL;
-}
-
 AFD *intersecao(AFD *afd1, AFD *afd2)
 {
   puts("Intersecao");

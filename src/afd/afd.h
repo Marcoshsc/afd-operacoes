@@ -27,6 +27,7 @@ typedef struct afd_est
 } AFD;
 
 Transition *getTransition(AFD afd, char *from, char *to, char *read);
+Transition *getEmptyTransition();
 int getStatePosition(AFD afd, char *state);
 int getSymbolPosition(AFD afd, char *symbol);
 AFD *getEmptyAFD();

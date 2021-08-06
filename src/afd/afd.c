@@ -118,6 +118,15 @@ void readFinalStates(AFD *afd, FILE *file)
   }
 }
 
+Transition *getEmptyTransition()
+{
+  Transition *transition = malloc(sizeof(Transition));
+  transition->from = malloc(sizeof(int));
+  transition->to = malloc(sizeof(int));
+  transition->read = malloc(sizeof(int));
+  return transition;
+}
+
 AFD *readAFD(char *fileName)
 {
   FILE *file = fopen(fileName, "r");
@@ -162,6 +171,7 @@ void writeTransitions(AFD afd, FILE *file)
   for (int i = 0; i < size; i++)
   {
     Transition *element = afd.transitions[i];
+    printf("From %d to %d reading %d\n", *element->from, *element->to, *element->read);
     char *from = afd.states[*element->from];
     char *read = afd.alphabet[*element->read];
     char *to = afd.states[*element->to];
@@ -187,10 +197,10 @@ void writeAFD(AFD afd, char *fileName)
   {
     return;
   }
-  printf("%d\n", *afd.number_states);
   writeChars(afd.states, *afd.number_states, file);
   writeChars(afd.alphabet, *afd.number_symbols, file);
   writeTransitions(afd, file);
+  puts("here");
   writeChar(afd.states[*afd.initial_state], file);
   writeFinalStates(afd, file);
 }
