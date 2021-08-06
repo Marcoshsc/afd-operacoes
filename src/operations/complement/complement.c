@@ -59,6 +59,5 @@ AFD *complemento(AFD *afd)
     }
   }
 
-  puts("finished");
   return newAfd;
 }

@@ -13,11 +13,12 @@ typedef struct dotformat_est
   char **double_circles;
   int number_double_circles;
   int number_transitions;
+  char *initial_state;
   DOTTransition **transitions;
 } DOTFormat;
 
 DOTTransition *getDOTTransition(char *from, char *to, char *label);
-DOTFormat *getDOTFormat(char **double_circles, int number_double_circles, DOTTransition **transitions, int number_transitions);
+DOTFormat *getDOTFormat(char **double_circles, int number_double_circles, DOTTransition **transitions, int number_transitions, char *initial_state);
 void freeDotTransition(DOTTransition *transition);
 void freeDot(DOTFormat *DOTFormat);
 void writeDot(DOTFormat *DOTFormat, char *fileName);

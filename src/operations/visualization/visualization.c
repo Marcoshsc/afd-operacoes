@@ -39,7 +39,8 @@ DOTFormat *visualizacao(AFD *afd)
 {
   char **double_circles = getDoubleCircles(afd);
   DOTTransition **transitions = getTransitionArray(afd);
-  DOTFormat *dotFormat = getDOTFormat(double_circles, *afd->number_final_states, transitions, *afd->number_transitions);
+  char *initial_state = copyString(afd->states[*afd->initial_state]);
+  DOTFormat *dotFormat = getDOTFormat(double_circles, *afd->number_final_states, transitions, *afd->number_transitions, initial_state);
   filterTransitions(dotFormat);
   return dotFormat;
 }

@@ -14,7 +14,8 @@ void writeDot(DOTFormat *dotFormat, char *fileName)
   {
     fprintf(file, "%s ", dotFormat->double_circles[i]);
   }
-  fprintf(file, ";\nnode [shape = circle];\n");
+  fprintf(file, ";\nnode [shape = circle];\ninit [shape = point];\n");
+  fprintf(file, "init -> %s;\n", dotFormat->initial_state);
   for (int i = 0; i < dotFormat->number_transitions; i++)
   {
     DOTTransition *element = dotFormat->transitions[i];
@@ -32,13 +33,15 @@ DOTTransition *getDOTTransition(char *from, char *to, char *label)
   return transition;
 }
 
-DOTFormat *getDOTFormat(char **double_circles, int number_double_circles, DOTTransition **transitions, int number_transitions)
+DOTFormat *getDOTFormat(char **double_circles, int number_double_circles, DOTTransition **transitions, int number_transitions, char *initial_state)
 {
   DOTFormat *dotFormat = malloc(sizeof(DOTFormat));
   dotFormat->double_circles = double_circles;
   dotFormat->number_double_circles = number_double_circles;
   dotFormat->transitions = transitions;
   dotFormat->number_transitions = number_transitions;
+  dotFormat->initial_state = initial_state;
+  return dotFormat;
 }
 
 void freeDotTransition(DOTTransition *transition)

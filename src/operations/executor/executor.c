@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include "../operations.h"
 #include "../recognition/recognition.h"
 
 void executeOperation(ApplicationContext context)
