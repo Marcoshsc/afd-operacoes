@@ -61,11 +61,7 @@ AFD *afdProduct(AFD *afd1, AFD *afd2)
   for (int i = 0; i < *productAfd->number_states; i++)
   {
     char *state = productAfd->states[i];
-    puts(state);
     char **splitted = splitByComma(state);
-    puts("here");
-    puts(splitted[0]);
-    puts(splitted[1]);
     for (int j = 0; j < *productAfd->number_symbols; j++)
     {
       char *symbol = productAfd->alphabet[j];

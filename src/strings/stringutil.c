@@ -34,7 +34,6 @@ char *concatWithComma(char *str1, char *str2)
 char **splitByComma(char *str)
 {
   int size = strlen(str);
-  printf("%d\n", size);
   int wordLength = 0;
   char **words = malloc(sizeof(char *) * 2);
   for (int i = 0; i < size; i++)
@@ -43,8 +42,6 @@ char **splitByComma(char *str)
     int secondSize = size - wordLength + 1;
     if (str[i] == '_')
     {
-      printf("%d\n", wordLength);
-      printf("%d\n", secondSize);
       words[0] = malloc(sizeof(char) * wordLength);
       words[1] = malloc(sizeof(char) * secondSize);
       str[i] = '\0';
