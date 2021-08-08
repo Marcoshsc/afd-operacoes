@@ -59,15 +59,128 @@ char *mergeStates(AFD *afd, int *states, int size)
   return newState;
 }
 
-AFD *minimizacao(AFD *afd)
+Transition *getTransitionFromIndexes(AFD *afd, int from, int read)
 {
+  for (int i = 0; i < *afd->number_transitions; i++)
+  {
+    if (*afd->transitions[i]->from == from && *afd->transitions[i]->read == read)
+    {
+      return afd->transitions[i];
+    }
+  }
+  return NULL;
+}
+
+void updateReachableList(AFD *afd, int **reachables, int *reachableSize, int element)
+{
+  for (int i = 0; i < *afd->number_symbols; i++)
+  {
+    Transition *transition = getTransitionFromIndexes(afd, element, i);
+    if (!isContained(*reachables, *transition->to, *reachableSize))
+    {
+      (*reachableSize)++;
+      *reachables = realloc(*reachables, *reachableSize);
+      (*reachables)[(*reachableSize) - 1] = *transition->to;
+      updateReachableList(afd, reachables, reachableSize, *transition->to);
+    }
+  }
+}
+
+AFD *copyAFDWithoutUnreachableStates(AFD *afd)
+{
+  AFD *newAfd = getEmptyAFD();
+  int *reachables = malloc(sizeof(int));
+  int reachableSize = 1;
+  reachables[0] = *afd->initial_state;
+  updateReachableList(afd, &reachables, &reachableSize, *afd->initial_state);
+
+  *newAfd->number_states = reachableSize;
+  newAfd->states = malloc(sizeof(char *) * reachableSize);
+  newAfd->final_states = malloc(sizeof(int));
+  int finalStateAllocSize = 1;
+  int finalStates = 0;
+  for (int i = 0; i < reachableSize; i++)
+  {
+    char *state = afd->states[reachables[i]];
+    newAfd->states[i] = copyString(state);
+    if (isContained(afd->final_states, reachables[i], *afd->number_final_states))
+    {
+      if (finalStateAllocSize == finalStates)
+      {
+        finalStateAllocSize++;
+        newAfd->final_states = realloc(newAfd->final_states, sizeof(int) * finalStateAllocSize);
+      }
+      newAfd->final_states[finalStates] = i;
+      finalStates++;
+    }
+  }
+  *newAfd->number_final_states = finalStates;
+
+  int numberTransitions = 0;
+  int allocSize = 1;
+  newAfd->transitions = malloc(sizeof(Transition *));
+  for (int i = 0; i < reachableSize; i++)
+  {
+    int element = reachables[i];
+    for (int j = 0; j < *afd->number_transitions; j++)
+    {
+      Transition *transition = afd->transitions[j];
+      if (*transition->to == element)
+      {
+        Transition *newTransition = getEmptyTransition();
+        char *state = afd->states[*transition->from];
+        int position = getStatePosition(*newAfd, state);
+        *newTransition->from = position;
+        *newTransition->read = *transition->read;
+        *newTransition->to = i;
+        if (allocSize == numberTransitions)
+        {
+          allocSize++;
+          newAfd->transitions = realloc(newAfd->transitions, sizeof(Transition *) * allocSize);
+        }
+        newAfd->transitions[numberTransitions] = newTransition;
+        numberTransitions++;
+      }
+    }
+  }
+  *newAfd->number_transitions = numberTransitions;
+
+  *newAfd->number_symbols = *afd->number_symbols;
+  newAfd->alphabet = malloc(sizeof(char *) * (*newAfd->number_symbols));
+  for (int i = 0; i < *newAfd->number_symbols; i++)
+  {
+    newAfd->alphabet[i] = copyString(afd->alphabet[i]);
+  }
+  *newAfd->initial_state = *afd->initial_state;
+
+  return newAfd;
+}
+
+AFD *minimizacao(AFD *initialAfd)
+{
+  AFD *afd = copyAFDWithoutUnreachableStates(initialAfd);
+
+  printf("%d\n", *afd->number_transitions);
+  for (int i = 0; i < *afd->number_transitions; i++)
+  {
+    Transition *transition = afd->transitions[i];
+    printf("From %d to %d, reading %d\n", *transition->from, *transition->to, *transition->read);
+    printf("From %s to %s, reading %s\n\n", afd->states[*transition->from], afd->states[*transition->to], afd->alphabet[*transition->read]);
+  }
+
   int **equivalenceGroups = malloc(sizeof(int *) * 2);
   int *sizes = malloc(sizeof(int) * 2);
-  int totalGroups = 2;
   sizes[0] = *afd->number_final_states;
   sizes[1] = *afd->number_states - (*afd->number_final_states);
-  equivalenceGroups[0] = malloc(sizeof(int) * sizes[0]);
-  equivalenceGroups[1] = malloc(sizeof(int) * sizes[1]);
+  int totalGroups = !sizes[0] || !sizes[1] ? 1 : 2;
+  equivalenceGroups[0] = sizes[0] ? malloc(sizeof(int) * sizes[0]) : NULL;
+  equivalenceGroups[1] = sizes[1] ? malloc(sizeof(int) * sizes[1]) : NULL;
+
+  if (!sizes[0])
+  {
+    sizes[0] = sizes[1];
+    equivalenceGroups[0] = equivalenceGroups[1];
+  }
 
   for (int i = 0; i < *afd->number_final_states; i++)
   {
@@ -76,7 +189,7 @@ AFD *minimizacao(AFD *afd)
   int currentStartStateIndex = 0;
   for (int i = 0; i < *afd->number_states; i++)
   {
-    if (isContained(afd->final_states, i, *afd->number_states))
+    if (isContained(afd->final_states, i, *afd->number_final_states))
     {
       continue;
     }
@@ -86,6 +199,10 @@ AFD *minimizacao(AFD *afd)
   int changed = 0;
   do
   {
+    if (!sizes[0] || !sizes[1])
+    {
+      break;
+    }
     changed = 0;
     for (int i = 0; i < totalGroups; i++)
     {
@@ -194,6 +311,10 @@ AFD *minimizacao(AFD *afd)
   int currentTransitionIndex = 0;
   for (int i = 0; i < totalGroups; i++)
   {
+    if (!sizes[i])
+    {
+      continue;
+    }
     for (int j = 0; j < *afd->number_symbols; j++)
     {
       Transition *transition = getEmptyTransition();
@@ -215,5 +336,15 @@ AFD *minimizacao(AFD *afd)
   free(equivalenceGroups);
   free(sizes);
 
+  freeAFD(afd);
+  printf("%d\n", *newAfd->number_transitions);
+  printf("%d\n", *newAfd->number_states);
+  for (int i = 0; i < *newAfd->number_transitions; i++)
+  {
+    Transition *transition = newAfd->transitions[i];
+    printf("%d - %d - %d\n", *transition->from, *transition->to, *transition->read);
+  }
+
+  puts("here");
   return newAfd;
 }

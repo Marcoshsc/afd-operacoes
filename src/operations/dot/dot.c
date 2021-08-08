@@ -9,12 +9,17 @@ void writeDot(DOTFormat *dotFormat, char *fileName)
   {
     return;
   }
-  fprintf(file, "digraph finite_state_machine {\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle]; ");
-  for (int i = 0; i < dotFormat->number_double_circles; i++)
+  fprintf(file, "digraph finite_state_machine {\nrankdir=LR;\nsize=\"8,5\"\n");
+  if (dotFormat->number_double_circles)
   {
-    fprintf(file, "\"%s\" ", dotFormat->double_circles[i]);
+    fprintf(file, "node [shape = doublecircle]; ");
+    for (int i = 0; i < dotFormat->number_double_circles; i++)
+    {
+      fprintf(file, "\"%s\" ", dotFormat->double_circles[i]);
+    }
+    fprintf(file, ";");
   }
-  fprintf(file, ";\nnode [shape = circle];\ninit [shape = point];\n");
+  fprintf(file, "\nnode [shape = circle];\ninit [shape = point];\n");
   fprintf(file, "init -> \"%s\";\n", dotFormat->initial_state);
   for (int i = 0; i < dotFormat->number_transitions; i++)
   {
