@@ -160,12 +160,9 @@ AFD *minimizacao(AFD *initialAfd)
 {
   AFD *afd = copyAFDWithoutUnreachableStates(initialAfd);
 
-  printf("%d\n", *afd->number_transitions);
   for (int i = 0; i < *afd->number_transitions; i++)
   {
     Transition *transition = afd->transitions[i];
-    printf("From %d to %d, reading %d\n", *transition->from, *transition->to, *transition->read);
-    printf("From %s to %s, reading %s\n\n", afd->states[*transition->from], afd->states[*transition->to], afd->alphabet[*transition->read]);
   }
 
   int **equivalenceGroups = malloc(sizeof(int *) * 2);
@@ -337,14 +334,10 @@ AFD *minimizacao(AFD *initialAfd)
   free(sizes);
 
   freeAFD(afd);
-  printf("%d\n", *newAfd->number_transitions);
-  printf("%d\n", *newAfd->number_states);
   for (int i = 0; i < *newAfd->number_transitions; i++)
   {
     Transition *transition = newAfd->transitions[i];
-    printf("%d - %d - %d\n", *transition->from, *transition->to, *transition->read);
   }
 
-  puts("here");
   return newAfd;
 }
