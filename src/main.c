@@ -2,6 +2,9 @@
 #include <string.h>
 #include "./operations/operations.h"
 
+/**
+ * Registra os parametros necessarios para o funcionamento da CLI da aplicacao.
+ */
 CLI_Params *createCLIParams()
 {
   CLI_Params *params = getParams(10);
@@ -17,6 +20,10 @@ CLI_Params *createCLIParams()
   return params;
 }
 
+/**
+ * Programa principal, executa o modulo de CLI, depois aplica o modulo de contexto,
+ * e ao final aplica o modulo de operacoes, para retornar o resultado esperado.
+ */
 int main(int argc, char *argv[])
 {
   CLI_Params *params = createCLIParams();
