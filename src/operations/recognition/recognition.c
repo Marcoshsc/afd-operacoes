@@ -13,6 +13,7 @@ char **readWords(char *fileName, int *size_ptr)
   while (fscanf(file, "%s\n", buffer) != EOF)
   {
     char *word = copyString(buffer);
+    size++;
     if (words)
     {
       words = realloc(words, sizeof(char *) * size);
@@ -21,8 +22,7 @@ char **readWords(char *fileName, int *size_ptr)
     {
       words = malloc(sizeof(char *));
     }
-    words[size] = word;
-    size++;
+    words[size - 1] = word;
   }
   *size_ptr = size;
   fclose(file);

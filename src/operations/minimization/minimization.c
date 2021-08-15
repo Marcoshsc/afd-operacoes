@@ -130,6 +130,10 @@ AFD *copyAFDWithoutUnreachableStates(AFD *afd)
         Transition *newTransition = getEmptyTransition();
         char *state = afd->states[*transition->from];
         int position = getStatePosition(*newAfd, state);
+        if (position == -1)
+        {
+          continue;
+        }
         *newTransition->from = position;
         *newTransition->read = *transition->read;
         *newTransition->to = i;
@@ -196,16 +200,11 @@ AFD *minimizacao(AFD *initialAfd)
   int changed = 0;
   do
   {
-    if (!sizes[0] || !sizes[1])
-    {
-      break;
-    }
     changed = 0;
     for (int i = 0; i < totalGroups; i++)
     {
       int *x = NULL;
       int xSize = 0;
-
       int element = equivalenceGroups[i][0];
       int *elementEquivalenceGroups = malloc(sizeof(int) * (*afd->number_symbols));
       for (int k = 0; k < *afd->number_symbols; k++)
